@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=format-detection content="telephone=no, email=no">
+    <meta name=apple-touch-fullscreen content=yes>
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=apple-mobile-web-app-status-bar-style content=black>
+    <meta name=format-detection content="telephone=no">
+    <meta http-equiv=Cache-Control content="no-cache, no-store, must-revalidate">
+    <meta http-equiv=Pragma content=no-cache>
+    <meta http-equiv=Expires content=0>
+    <title>loot生成器</title>
+    <script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.9/vue.min.js"></script>
+
+    <style>
+        html,
+        body {
+            background-color: rgb(27, 3, 3);
+            padding: 0;
+            margin: 0;
+        }
+
+        .loot-box svg {
+            width: 100%;
+        }
+
+        .loot-box img {
+            width: 100vw;
+            height: 100vw;
+        }
+
+        .input textarea {
+            background-color: black;
+            color: #fff;
+            width: 100%;
+            padding: 0;
+            resize: none;
+            border: none;
+            outline: none;
+            height: 50vw;
+            box-sizing: border-box;
+            line-height: 2;
+            padding: 30px;
+        }
+
+        .btn {
+            width: 100vw;
+            height: 30px;
+            line-height: 30px;
+            color: #fff;
+            text-align: center;
+            background-color: #333;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        canvas {
+            width: 100vw;
+            height: 100vw;
+            display: none;
+            /* background-color: #000; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="input">
+            <textarea v-model="text" @input="onChange" placeholder="输入你的loot，回车换行"></textarea>
+            <div class="btn">
+                <!-- <span v-if="visible">隐藏</span>
+                <span v-else>展示</span> -->
+                <span>下方长按保存Loot图片</span>
+            </div>
+        </div>
+        <div class="loot-box">
+            <!-- <img :src="src" alt=""> -->
+            <canvas id="canvas"></canvas>
+            <img :src="src" alt="" />
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                text: "",
+                arr: [],
+                visible: false,
+                src: "",
+            };
+        },
+        mounted() {
+            const canvas = document.getElementById("canvas");
+            this.canvas = canvas;
+            this.ctx = canvas.getContext("2d");
+            this.w = document.body.clientWidth;
+            canvas.width = this.w;
+            canvas.height = this.w;
+            this.genImage();
+        },
+        methods: {
+            onChange() {
+                this.arr = this.text.split("\n");
+                this.genImage();
+            },
+            genImage() {
+                this.genImage1();
+                // this.src = str.replace(/"/g,"'").replace(/%/g,"%25").replace(/#/g,"%23").replace(/{/g,"%7B").replace(/}/g,"%7D").replace(/</g,"%3C").replace(/>/g,"%3E");
+            },
+            genImage1() {
+                var fs = this.w / 24;
+                this.ctx.clearRect(0, 0, this.w, this.w);
+                this.ctx.fillStyle = "#000";
+                this.ctx.fillRect(0, 0, this.w, this.w);
+                this.ctx.font = fs+"px serif";
+                this.ctx.fillStyle = "#fff";
+                var lh = fs*2;
+                this.arr.forEach((text, i) => {
+                    this.ctx.fillText(text, lh, (i + 1.2) * lh);
+                });
+                this.src = this.canvas.toDataURL("base64");
+            }
+        },
+    })
+</script>
+
+</html>
